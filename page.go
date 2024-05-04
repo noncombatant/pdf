@@ -419,13 +419,14 @@ func (p Page) Content() Content {
 			Trm := matrix{{g.Tfs * g.Th, 0, 0}, {0, g.Tfs, 0}, {0, g.Trise, 1}}.mul(g.Tm).mul(g.CTM)
 			w0 := g.Tf.Width(int(s[n]))
 			n++
-			if ch != ' ' {
-				f := g.Tf.BaseFont()
-				if i := strings.Index(f, "+"); i >= 0 {
-					f = f[i+1:]
-				}
-				text = append(text, Text{f, Trm[0][0], Trm[2][0], Trm[2][1], w0 / 1000 * Trm[0][0], string(ch)})
+			// Thanks to shakeel: https://github.com/shakeel/pdf2txt/blob/master/pdf/page.go#L422
+			//if ch != ' ' {
+			f := g.Tf.BaseFont()
+			if i := strings.Index(f, "+"); i >= 0 {
+				f = f[i+1:]
 			}
+			text = append(text, Text{f, Trm[0][0], Trm[2][0], Trm[2][1], w0 / 1000 * Trm[0][0], string(ch)})
+			//}
 			tx := w0/1000*g.Tfs + g.Tc
 			if ch == ' ' {
 				tx += g.Tw
